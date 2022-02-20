@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserSingUpMail;
 use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
  
 class UserController extends Controller
@@ -41,27 +44,50 @@ class UserController extends Controller
     {
         return view('User.singup');
     }
-    public function singUpPost()
+    public function singUpPost(Request $request)
     {
         $this->validate(request(), [
-            'name' => 'required|min:3:max:60',
-            'email' => 'required|email|unique',
-            'password' => 'required|confirmed|min:5'
+          //   'name' => 'required|min:3:max:60',
+          //  'email' => 'required|email|unique',
+          //  'password' => 'required|confirmed|min:4' 
         ]);
-        $users = User::creare([
+        $users = User::create([
             'name' =>  request('name'),
             'email'  => request('email'),
             'password' => Hash::make(request('password')),
             'activation' => Str::random(60),
             'status' => 0
         ]);
-        auth()->login($users);
-        return redirect()->route('anasayfa');
+
+        Mail::to(request('email'))->send(new UserSingUpMail($users));
+         auth()->login($users);
+        return redirect()->route('home');
+    }
+
+    public function activate($key)
+    {
+        $users =User::where('activation', $key)->first();
+        if(!is_null($users)){
+            $users->status = 1;
+            $users->activation = null;
+            $users->save();
+           // auth()->login($users);
+            return redirect()->route('home')
+            ->with('message_type','success')
+            ->with('message','Hesabınız aktifleştirildi');
+        }
+        else
+        {
+            return redirect()->route('home')
+                ->with('message_type', 'danger')
+                ->with('message', 'Hesabınız aktifleştirilemedi');
+        }
+    
     }
     public function logoutPost()
     {
         auth()->logout();
-        request()->sessiom() > flush();
+        request()->session() > flush();
         request()->session()->regenerate();
         return redirect()->route('home');
     }

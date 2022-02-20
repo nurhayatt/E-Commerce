@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
     use Notifiable;
 
@@ -15,10 +15,8 @@ class User extends Model
      *
      * @var array
      */
-    use SoftDeletes;
-    protected $table="users";
     protected $fillable = [
-        'name', 'email', 'password','activation','status'
+        'name', 'email', 'password',
     ];
 
     /**
@@ -27,10 +25,14 @@ class User extends Model
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','activation'
+        'password', 'remember_token',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     const CREATED_AT = "created_date";
     const UPDATED_AT = "updated_date";
-
- 
 }

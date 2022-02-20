@@ -28,9 +28,14 @@
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <h1>Ürün adı</h1>
-                    <p class="price">129 ₺</p>
-                    <p><a href="#" class="btn btn-theme">Sepete Ekle</a></p>
+                    <h1>  {{ $products->name}}</h1>
+                    <p class="price">  {{ $products->price}} ₺</p>
+                    <form action="{{ route('basket.add') }}" method="post">
+                     @csrf
+                     <input type="hidden" name="id" value="{{ $products->id }}">
+                       <input type="submit" class="btn btn-theme" value="Sepete Ekle">
+                    </form>
+                  
                 </div>
             </div>
 

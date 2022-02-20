@@ -25,7 +25,11 @@ Route::get('/Product/{slug_productname}', 'Admin\Product\ProductController@index
 Route::post('/Search', 'Admin\Product\ProductController@search')->name('search');
 Route::get('/Search', 'Admin\Product\ProductController@search')->name('search');
 
-Route::get('/Basket', 'Admin\Basket\BasketController@index')->name('basket');
+Route::prefix('Basket')->group(function () {
+    Route::get('/', 'Admin\Basket\BasketController@index')->name('basket');
+    Route::post('/Add', 'Admin\Basket\BasketController@create')->name('basket.add');
+
+});
 
 Route::group(['middleware'=> 'auth'], function(){
     Route::get('/Payment', 'Admin\Payment\PaymentController@index')->name('payment');
@@ -40,5 +44,5 @@ Route::group(['prefix'=>'User'],function(){
     Route::post('/Logout', 'User\UserController@logoutPost')->name('user.logout');
     Route::get('/SingUp', 'User\UserController@singUp')->name('user.singup');
     Route::post('/SingUp', 'User\UserController@singUpPost');
- 
+ Route::get('/Activate/{key}','User\UserController@activate')->name('user.activate');
 });
