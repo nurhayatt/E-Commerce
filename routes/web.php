@@ -28,6 +28,9 @@ Route::get('/Search', 'Admin\Product\ProductController@search')->name('search');
 Route::prefix('Basket')->group(function () {
     Route::get('/', 'Admin\Basket\BasketController@index')->name('basket');
     Route::post('/Add', 'Admin\Basket\BasketController@create')->name('basket.add');
+    Route::delete('/Remove/{rowId}', 'Admin\Basket\BasketController@remove')->name('basket.remove');
+    Route::delete('/Truncate', 'Admin\Basket\BasketController@truncate')->name('basket.truncate');
+    Route::patch('/Update/{rowId}', 'Admin\Basket\BasketController@update')->name('basket.update');
 
 });
 
