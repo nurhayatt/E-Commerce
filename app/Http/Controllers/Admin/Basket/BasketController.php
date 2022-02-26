@@ -23,7 +23,7 @@ class BasketController extends Controller
     {
         $products = Product::find(request('id'));
         Cart::add($products->id, $products->name, 1, $products->price, ['slug'=>$products->slug]);
- 
+
         return redirect()->route('basket')
         ->with('message_type','success')  
         ->with('message','Ürün sepete eklendi.');   
