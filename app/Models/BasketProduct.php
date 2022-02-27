@@ -13,5 +13,8 @@ class BasketProduct extends Model
     protected $guarded = [];
     const CREATED_AT = "created_date";
     const UPDATED_AT = "updated_date";
-
+    public function getProduct()
+    {
+        return $this->belongsTo('App\Models\Product', 'product_id');
+    }
 }

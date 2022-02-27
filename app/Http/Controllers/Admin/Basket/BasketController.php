@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin\Basket;
 
 use App\Http\Controllers\Controller;
+use App\Models\Basket;
+use App\Models\BasketProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
-#use Gloudemans\Shoppingcart\Cart;
-//use Cart;
+
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,19 +35,32 @@ class BasketController extends Controller
 
     public function remove($rowId)
     {
+        if(auth()->check())
+        {
+            $active_basket_id = session('active_basket_id');
+            $cartItem = Cart::get($rowId);
+            BasketProduct::where('basket_id',$active_basket_id)->where('product_id',$cartItem->id)->delete();
+        }
         Cart::remove($rowId);
         return redirect()->route('basket')
         ->with('message_type','success')  
         ->with('message','Ürün sepetten kaldırıldı.');   
+   
+   
     }
     public function truncate()
     {
+        if (auth()->check()) {
+            $active_basket_id = session('active_basket_id');
+           
+            BasketProduct::where('basket_id', $active_basket_id)->delete();
+        }
         Cart::destroy();
         return redirect()->route('basket')
         ->with('message_type','success')  
         ->with('message','Sepet boşaltıldı.');   
     }
-    public function update(Request $request ,$rowId)
+    public function update($rowId)
     {
         
         $validator = Validator::make(request()->all(), [
@@ -58,7 +72,15 @@ class BasketController extends Controller
             session()->flash('message', 'Adet değeri 0 ile 5 arasında olmalıdır.');
             return response()->json(['success' => false]);
         }
-      
+        if (auth()->check()) {
+            $active_basket_id = session('active_basket_id');
+            $cartItem=Cart::get($rowId);
+           if(request('number')==0)
+            BasketProduct::where('basket_id', $active_basket_id)->where('product_id', $cartItem->id)->delete();
+            else
+            BasketProduct::where('basket_id', $active_basket_id)->where('product_id', $cartItem->id)
+            ->update(['number' => request('number')]);
+        }
     Cart::update($rowId,request('number'));
      session()->flash('message_type','success');
      session()->flash('message','Adet Bilgisi güncellendi.');
