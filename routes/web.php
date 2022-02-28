@@ -33,9 +33,9 @@ Route::prefix('Basket')->group(function () {
     Route::patch('/Update/{rowId}', 'Admin\Basket\BasketController@update')->name('basket.update');
 
 });
-
+Route::get('/Payment', 'Admin\Payment\PaymentController@index')->name('payment');
 Route::group(['middleware'=> 'auth'], function(){
-    Route::get('/Payment', 'Admin\Payment\PaymentController@index')->name('payment');
+   
     Route::get('/Order', 'Admin\Order\OrderController@index')->name('order');
     Route::get('/Order/{id}', 'Admin\Order\OrderController@detail')->name('order.detail');
 

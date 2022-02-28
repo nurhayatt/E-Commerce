@@ -7,6 +7,7 @@ use App\Mail\UserSingUpMail;
 use App\Models\Basket;
 use App\Models\BasketProduct;
 use App\Models\User;
+use App\Models\UserDetail;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,6 +81,8 @@ class UserController extends Controller
             'status' => 0
         ]);
 
+      $users->getUserDetail()->save(new UserDetail());
+        
         Mail::to(request('email'))->send(new UserSingUpMail($users));
         auth()->login($users);
         return redirect()->route('home');

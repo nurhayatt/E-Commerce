@@ -14,4 +14,9 @@ class Basket extends Model
     protected $guarded = [];
     const CREATED_AT = "created_date";
     const UPDATED_AT = "updated_date";
+  
+    public function getOrder()
+    {
+        return $this->hasOne('App\Models\Order');
+    }
 }

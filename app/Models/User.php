@@ -35,4 +35,11 @@ class User extends Authenticatable
      */
     const CREATED_AT = "created_date";
     const UPDATED_AT = "updated_date";
+
+    public function getUserDetail()
+    {
+        return $this->hasOne('App\Models\UserDetail');
+    }
+
+
 }
