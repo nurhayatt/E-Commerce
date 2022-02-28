@@ -18,9 +18,13 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->integer('basket_id')->unsigned();
 
-            $table->decimal('order_amount', 5, 4);
+            $table->decimal('order_amount', 10, 4);
             $table->string('status', 30)->nullable();
 
+            $table->string('name', 50)->nullable();
+            $table->string('adress', 200)->nullable();
+            $table->string('telephone', 20)->nullable();
+            $table->string('phone', 20)->nullable();
             $table->string('bank', 20)->nullable();
             $table->integer('number_of_installments')->nullable();
 

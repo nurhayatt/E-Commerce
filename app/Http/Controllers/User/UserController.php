@@ -28,12 +28,14 @@ class UserController extends Controller
 
     public function loginPost()
     {
+        
         $this->validate(request(), [
 
             'email' => 'required',
             'password' => 'required'
         ]);
         if (auth()->attempt(['email' => request('email'), 'password' => request('password')], request()->has('remember'))) {
+            
             request()->session()->regenerate();
 
             $active_basket_id = Basket::firstOrCreate(['user_id' => auth()->user()->id])->id;
@@ -49,6 +51,7 @@ class UserController extends Controller
                     );
                 }
             }
+            
             Cart::destroy();
             $basketProducts = BasketProduct::with('product')->where('basket_id', $active_basket_id)->get();
             foreach ($basketProducts as $basketProduct) {
@@ -56,6 +59,7 @@ class UserController extends Controller
             }
             return redirect()->intended('/');
         } else {
+            
             $errors  = ['email' => 'Hatalı Giriş'];
             return back()->withErrors($errors);
         }

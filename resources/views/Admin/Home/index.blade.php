@@ -53,9 +53,9 @@
                 <div class="panel panel-default" id="sidebar-product">
                     <div class="panel-heading">Günün Fırsatı</div>
                     <div class="panel-body">
-                        <a href="{{ route('product', $opportunity_day->slug) }}">
+                        <a href="{{route('product',$opportunity_day->slug)}}">
                             <img src="http://lorempixel.com/400/485/food/1" class="img-responsive">
-                        {{ $opportunity_day->name }}
+                        {{$opportunity_day->name}}
                         
                         </a>
                     </div>

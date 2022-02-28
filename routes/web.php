@@ -34,6 +34,7 @@ Route::prefix('Basket')->group(function () {
 
 });
 Route::get('/Payment', 'Admin\Payment\PaymentController@index')->name('payment');
+Route::post('/Pay', 'Admin\Payment\PaymentController@pay')->name('pay');
 Route::group(['middleware'=> 'auth'], function(){
    
     Route::get('/Order', 'Admin\Order\OrderController@index')->name('order');
