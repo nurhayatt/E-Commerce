@@ -28,17 +28,27 @@ class UserController extends Controller
 
     public function loginPost()
     {
-        
-        $this->validate(request(), [
+       
 
-            'email' => 'required',
+        /* $this->validate(request(), [
+
+            'email' => 'required|email',
             'password' => 'required'
-        ]);
+        ]); */
+
+
         if (auth()->attempt(['email' => request('email'), 'password' => request('password')], request()->has('remember'))) {
-            
+
             request()->session()->regenerate();
 
-            $active_basket_id = Basket::firstOrCreate(['user_id' => auth()->user()->id])->id;
+                $active_basket_id = Basket::firstOrCreate(['user_id'=>auth()])->id;//activeBasketId();
+               // dd($active_basket_id);
+            if (!empty($active_basket_id)) {
+                $active_basket = Basket::create([
+                    'user_id' => auth()->id()
+                ]);
+                $active_basket_id = $active_basket->id;
+            }
             session()->put("active_basket_id", $active_basket_id);
             if (Cart::count() > 0) {
                 foreach (Cart::content() as $cartItem) {
@@ -47,11 +57,11 @@ class UserController extends Controller
                             'basket_id' => $active_basket_id, 'product_id' => $cartItem->id
                         ],
 
-                        ['number' => $active_basket_id->qty, 'price' => $cartItem->price, 'durum' => 'Beklemede'],
+                        ['number' => $active_basket_id->qty, 'price' => $cartItem->price, 'status' => 'Beklemede'],
                     );
                 }
             }
-            
+
             Cart::destroy();
             $basketProducts = BasketProduct::with('product')->where('basket_id', $active_basket_id)->get();
             foreach ($basketProducts as $basketProduct) {
@@ -59,7 +69,7 @@ class UserController extends Controller
             }
             return redirect()->intended('/');
         } else {
-            
+
             $errors  = ['email' => 'Hatalı Giriş'];
             return back()->withErrors($errors);
         }
@@ -85,8 +95,8 @@ class UserController extends Controller
             'status' => 0
         ]);
 
-      $users->getUserDetail()->save(new UserDetail());
-        
+        $users->getUserDetail()->save(new UserDetail());
+
         Mail::to(request('email'))->send(new UserSingUpMail($users));
         auth()->login($users);
         return redirect()->route('home');

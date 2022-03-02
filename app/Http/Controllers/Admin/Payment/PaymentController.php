@@ -22,13 +22,15 @@ class PaymentController extends Controller
             ->with('message_type', 'info')
             ->with('message', 'Ödeme işlemi için sepetinizde bir ürün bulunmalıdır.');
         }
-        $user_detail = auth()->user()->userDetail;
+        $user_detail = auth()->user()->getuserDetail;
+    
         return view("Admin.Payment.index",compact('user_detail'));
     }
 
     public function pay() /* sanal pos entegrasyonu olmadığı için bankanın buraya yönlendirdiğini var sayıyoruz*/
     {
         $order =  request()->all();
+      
         $order['basket_id'] = session('active_basket_id');
         $order['bank'] = "Garanti";
         $order['number_of_installments'] = 1;
