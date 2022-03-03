@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 });
  */
+
 Route::get('/', 'Admin\Home\HomeController@index')->name('home');
 
 Route::get('/Category/{slug_categoryname}', 'Admin\Category\CategoryController@index')->name('category');
