@@ -18,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 });
  */
 
+Route::group(['prefix' => 'User'], function () {
+    Route::get('/Login', 'User\UserController@login')->name('user.login');
+    Route::post('/Login', 'User\UserController@loginPost');
+    Route::post('/Logout', 'User\UserController@logoutPost')->name('user.logout');
+    Route::get('/SingUp', 'User\UserController@singUp')->name('user.singup');
+    Route::post('/SingUp', 'User\UserController@singUpPost');
+    Route::get('/Activate/{key}', 'User\UserController@activate')->name('user.activate');
+});
 Route::get('/', 'Admin\Home\HomeController@index')->name('home');
 
 Route::get('/Category/{slug_categoryname}', 'Admin\Category\CategoryController@index')->name('category');
@@ -41,13 +49,4 @@ Route::group(['middleware'=> 'auth'], function(){
     Route::get('/Order', 'Admin\Order\OrderController@index')->name('order');
     Route::get('/Order/{id}', 'Admin\Order\OrderController@detail')->name('order.detail');
 
-});
-
-Route::group(['prefix'=>'User'],function(){
-    Route::get('/Login', 'User\UserController@login')->name('user.login');
-    Route::post('/Login', 'User\UserController@loginPost');
-    Route::post('/Logout', 'User\UserController@logoutPost')->name('user.logout');
-    Route::get('/SingUp', 'User\UserController@singUp')->name('user.singup');
-    Route::post('/SingUp', 'User\UserController@singUpPost');
- Route::get('/Activate/{key}','User\UserController@activate')->name('user.activate');
 });
