@@ -26,6 +26,8 @@ Route::group(['prefix' => 'User'], function () {
     Route::post('/SingUp', 'User\UserController@singUpPost');
     Route::get('/Activate/{key}', 'User\UserController@activate')->name('user.activate');
 });
+
+
 Route::get('/', 'Admin\Home\HomeController@index')->name('home');
 
 Route::get('/Category/{slug_categoryname}', 'Admin\Category\CategoryController@index')->name('category');
